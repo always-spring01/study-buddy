@@ -3,9 +3,10 @@ import { collection, addDoc, serverTimestamp, getDocs, doc, getDoc } from 'fireb
 
 const notesCollectionRef = collection(db, 'notes');
 
-export const addNote = async (content) => {
+export const addNote = async (userId, content) => {
   try {
-    const docRef = await addDoc(notesCollectionRef, {
+    const userNotesCollectionRef = collection(db, 'users', userId, 'notes');
+    const docRef = await addDoc(userNotesCollectionRef, {
       title: '새 노트',
       content: content,
       createdAt: serverTimestamp(),
@@ -18,9 +19,11 @@ export const addNote = async (content) => {
   }
 };
 
-export const getNotes = async () => {
+export const getNotes = async (userId) => {
+    if (!userId) return [];
     try {
-      const data = await getDocs(notesCollectionRef);
+        const userNotesCollectionRef = collection(db, 'users', userId, 'notes');
+        const data = await getDocs(userNotesCollectionRef);
       const notes = data.docs.map((doc) => ({
         ...doc.data(),
         id: doc.id,
@@ -32,9 +35,10 @@ export const getNotes = async () => {
     }
   };
 
-  export const getNoteById = async (noteId) => {
+  export const getNoteById = async (userId, noteId) => {
+    if (!userId) return null;
     try {
-      const noteDoc = doc(db, 'notes', noteId);
+      const noteDoc = doc(db, 'users', userId, 'notes', noteId);
       const docSnap = await getDoc(noteDoc);
   
       if (docSnap.exists()) {
