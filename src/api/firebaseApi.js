@@ -1,5 +1,5 @@
 import { db } from '../config/firebaseConfig';
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, doc, getDoc } from 'firebase/firestore';
 
 const notesCollectionRef = collection(db, 'notes');
 
@@ -17,3 +17,34 @@ export const addNote = async (content) => {
     return null;
   }
 };
+
+export const getNotes = async () => {
+    try {
+      const data = await getDocs(notesCollectionRef);
+      const notes = data.docs.map((doc) => ({
+        ...doc.data(),
+        id: doc.id,
+      }));
+      return notes;
+    } catch (e) {
+      console.error('Error occured: ', e);
+      return [];
+    }
+  };
+
+  export const getNoteById = async (noteId) => {
+    try {
+      const noteDoc = doc(db, 'notes', noteId);
+      const docSnap = await getDoc(noteDoc);
+  
+      if (docSnap.exists()) {
+        return { ...docSnap.data(), id: docSnap.id };
+      } else {
+        console.log('Note not found!');
+        return null;
+      }
+    } catch (e) {
+      console.error('Error occured: ', e);
+      return null;
+    }
+  };

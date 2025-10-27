@@ -1,45 +1,65 @@
-import React, { useRef } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { Editor } from '@toast-ui/react-editor';
 import '@toast-ui/editor/dist/toastui-editor.css';
-import { addNote } from '../../api/firebaseApi';
+import { addNote, getNotes } from '../../api/firebaseApi';
 
 function Dashboard() {
   const editorRef = useRef(null);
+  const [notes, setNotes] = useState([]);
+
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const notesData = await getNotes();
+      setNotes(notesData);
+    };
+    fetchNotes();
+  }, []);
 
   const handleSave = async () => {
     if (editorRef.current) {
       const content = editorRef.current.getInstance().getMarkdown();
       
       if (!content.trim()) {
-        alert('내용을 입력하세요.');
+        alert('Please enter content.');
         return;
       }
       
-      console.log('저장할 내용:', content);
+      console.log('Saving content:', content);
       
       const newNoteId = await addNote(content);
       if (newNoteId) {
-        alert('노트가 성공적으로 저장되었습니다!');
+        alert('Note saved successfully!');
+        const notesData = await getNotes();
+        setNotes(notesData);
       } else {
-        alert('저장 중 오류가 발생했습니다.');
+        alert('Error saving note.');
       }
     }
   };
 
   return (
     <div>
-      <h2>대시보드 페이지</h2>
-      
-      <button onClick={handleSave}>저장하기</button>
-      
-      <Editor
-        ref={editorRef}
-        initialValue="여기에 마크다운을 입력하세요..."
-        previewStyle="vertical"
-        height="600px"
-        initialEditType="markdown"
-        useCommandShortcut={true}
-      />
+      <div>
+        <h3>My Notes</h3>
+        <ul>
+          {notes.map((note) => (
+            <li key={note.id}>
+              <Link to={`/note/${note.id}`}>{note.title} (ID: {note.id})</Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <hr />
+
+      <div>
+        <h2>새 노트 작성</h2>
+        <button onClick={handleSave}>저장하기</button>
+        <Editor
+          ref={editorRef}
+        />
+      </div>
     </div>
   );
 }
