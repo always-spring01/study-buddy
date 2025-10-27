@@ -84,3 +84,18 @@ npm run dev
 - AI 퀴즈 생성 기능은 사용자의 로컬 PC에서 **LMStudio가 실행 중이고**, **모델이 로드된** 상태여야 정상적으로 작동합니다.
 - LMStudio 서버가 꺼져있을 경우, 퀴즈 생성 시 브라우저 콘솔에 404 또는 500대 오류가 발생할 수 있습니다.
 - `src/api/openAiApi.js` 파일의 `model` 변수 값은, LMStudio에 로드한 모델의 식별자(Identifier)와 일치시켜야 합니다.
+
+## 6. 시연 화면
+### 1. 로그인 페이지
+<img width="2879" height="1452" alt="image" src="https://github.com/user-attachments/assets/062aff7a-e531-4994-8274-703aff11339c" />
+
+### 2. 회원가입 페이지
+<img width="2879" height="1459" alt="image" src="https://github.com/user-attachments/assets/132947c1-fee3-44d1-b4ef-acc985a81cc4" />
+
+### 3. 대시보드 페이지
+<img width="2879" height="1455" alt="image" src="https://github.com/user-attachments/assets/4fd43d75-dc91-4ab2-9c66-e0d090fb8701" />
+
+### 4. 상세보기 & AI 문제 페이지
+<img width="2879" height="1449" alt="image" src="https://github.com/user-attachments/assets/1908dab6-fdee-421b-abc4-195df51c8190" />
+
+
