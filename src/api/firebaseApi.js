@@ -1,13 +1,13 @@
 import { db } from '../config/firebaseConfig';
-import { collection, addDoc, serverTimestamp, getDocs, doc, getDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, getDocs, doc, getDoc, updateDoc, deleteDoc } from 'firebase/firestore';
 
 const notesCollectionRef = collection(db, 'notes');
 
-export const addNote = async (userId, content) => {
+export const addNote = async (userId, title, content) => {
   try {
     const userNotesCollectionRef = collection(db, 'users', userId, 'notes');
     const docRef = await addDoc(userNotesCollectionRef, {
-      title: '새 노트',
+      title: title || '제목 없음',
       content: content,
       createdAt: serverTimestamp(),
     });
@@ -50,5 +50,33 @@ export const getNotes = async (userId) => {
     } catch (e) {
       console.error('Error occured: ', e);
       return null;
+    }
+  };
+
+  export const updateNote = async (userId, noteId, newTitle, newContent) => {
+    if (!userId || !noteId) return null;
+    try {
+      const noteDoc = doc(db, 'users', userId, 'notes', noteId);
+      await updateDoc(noteDoc, {
+        title: newTitle,
+        content: newContent,
+        updatedAt: serverTimestamp()
+      });
+      return true;
+    } catch (e) {
+      console.error("노트 수정 오류:", e);
+      return false;
+    }
+  };
+
+  export const deleteNote = async (userId, noteId) => {
+    if (!userId || !noteId) return null;
+    try {
+      const noteDoc = doc(db, 'users', userId, 'notes', noteId);
+      await deleteDoc(noteDoc);
+      return true;
+    } catch (e) {
+      console.error("노트 삭제 오류:", e);
+      return false;
     }
   };

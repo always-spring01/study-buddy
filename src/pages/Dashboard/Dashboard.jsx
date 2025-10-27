@@ -10,6 +10,7 @@ function Dashboard() {
   const { currentUser } = useAuth();
   const [notes, setNotes] = useState([]);
   const navigate = useNavigate();
+  const [title, setTitle] = useState('');
 
   useEffect(() => {
     console.log("Current user:", currentUser);
@@ -32,16 +33,23 @@ function Dashboard() {
       return;
     }
     
+    if (!title.trim()) {
+      alert('제목을 입력하세요.');
+      return;
+    }
+
     const content = editorRef.current.getInstance().getMarkdown();
     if (!content.trim()) {
       alert('내용을 입력하세요.');
       return;
     }
     
-    const newNoteId = await addNote(currentUser.uid, content);
+    const newNoteId = await addNote(currentUser.uid, title, content);
     
     if (newNoteId) {
       alert('노트가 성공적으로 저장되었습니다!');
+      setTitle('');
+      editorRef.current.getInstance().setMarkdown('');
       const notesData = await getNotes(currentUser.uid);
       setNotes(notesData);
     } else {
@@ -69,6 +77,15 @@ function Dashboard() {
       <hr />
       <div>
         <h2>새 노트 작성</h2>
+        <div style={{ margin: '10px 0' }}>
+          <input 
+            type="text" 
+            placeholder="새 노트 제목"
+            value={title}
+            onChange={(e) => setTitle(e.target.value)}
+            style={{ width: '100%', padding: '8px' }}
+          />
+        </div>
         <button onClick={handleSave}>저장하기</button>
         <Editor
           ref={editorRef}
