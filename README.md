@@ -37,7 +37,7 @@ React와 Firebase를 기반으로 구현한 개인화 학습 노트 웹 애플�
 ### 1단계: 프로젝트 클론 및 설치
 
 ```bash
-git clone [https://github.com/always-spring01/study-buddy.git](https://github.com/always-spring01/study-buddy.git)
+git clone https://github.com/always-spring01/study-buddy.git
 cd study-buddy
 npm install
 ```
