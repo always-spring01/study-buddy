@@ -1,4 +1,5 @@
 # 🚀 Study Buddy: AI 학습 노트 퀴즈 생성기
+[Github 주소](https://github.com/always-spring01/study-buddy)
 
 ## 1. 프로젝트 소개
 
